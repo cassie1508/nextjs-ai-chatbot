@@ -24,13 +24,23 @@ export default function Page() {
   );
 
   useEffect(() => {
+    console.log('State status:', state.status);
     if (state.status === 'failed') {
       toast.error('Invalid credentials!');
+      setIsSuccessful(false);
     } else if (state.status === 'invalid_data') {
       toast.error('Failed validating your submission!');
-    } else if (state.status === 'success') {
+      setIsSuccessful(false);
+    }
+  }, [state.status, router]);
+
+  useEffect(() => {
+    if (state.status === 'success') {
       setIsSuccessful(true);
+      console.log('isSuccessful:', isSuccessful);
       router.refresh();
+    } else if (state.status === 'in_progress') {
+      setTimeout(() => setIsSuccessful(false), 5000); // Stop loading after 5 seconds
     }
   }, [state.status, router]);
 
